@@ -9,8 +9,7 @@ import 'package:movie_buzz/routes/app_route_consts.dart';
 
 class AppRouter {
   final GoRouter router = GoRouter(
-    // initialLocation: '/collection/573693',
-
+    // initialLocation: '/collection/86311/299534',
     routes: [
       GoRoute(
         path: '/',
@@ -37,14 +36,13 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: '/collection/:collectionId',
+        path: '/collection/:collectionId/:cameFrom',
         name: movieCollectionPageRoute,
         pageBuilder: (context, state) {
           return MaterialPage(
-            child: ScaffoldWrapper(
-              child: MovieCollections(
-                collectionId: state.pathParameters['collectionId']!,
-              ),
+            child: MovieCollections(
+              collectionId: state.pathParameters['collectionId']!,
+              cameFrom: state.pathParameters['cameFrom']!,
             ),
           );
         },

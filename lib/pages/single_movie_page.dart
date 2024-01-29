@@ -45,8 +45,7 @@ class _SingleMoviePageState extends State<SingleMoviePage> {
       url,
       headers: {
         "Content-Type": "application/json",
-        "Authorization":
-            "Bearer ${dotenv.env['BEARER_TOKEN']}"
+        "Authorization": "Bearer ${dotenv.env['BEARER_TOKEN']}"
       },
     );
 
@@ -296,55 +295,71 @@ class _SingleMoviePageState extends State<SingleMoviePage> {
                       ? Container(
                           margin: const EdgeInsets.only(top: 8),
                           width: MediaQuery.of(context).size.width,
-                          child: SizedBox(
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        'https://image.tmdb.org/t/p/original${movieDetails['belongs_to_collection']['backdrop_path']}',
-                                    errorWidget: (context, url, error) => Icon(
-                                      Icons.error_rounded,
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      size: 50,
+                          child: InkWell(
+                            onTap: () {
+                              router.goNamed(
+                                movieCollectionPageRoute,
+                                pathParameters: {
+                                  'cameFrom': '/movies/${widget.movieId}',
+                                  'collectionId':
+                                      '${movieDetails['belongs_to_collection']['id']}'
+                                },
+                              );
+                            },
+                            splashColor: Theme.of(context).colorScheme.primary,
+                            child: SizedBox(
+                              child: Column(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          'https://image.tmdb.org/t/p/original${movieDetails['belongs_to_collection']['backdrop_path']}',
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.error_rounded,
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                        size: 50,
+                                      ),
+                                      fadeInDuration:
+                                          const Duration(milliseconds: 250),
+                                      fadeOutDuration:
+                                          const Duration(milliseconds: 250),
+                                      placeholderFadeInDuration:
+                                          const Duration(milliseconds: 250),
+                                      placeholder: (context, url) {
+                                        return Container(
+                                          width: double.infinity,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.25,
+                                          alignment: Alignment.center,
+                                          child: CircularProgressIndicator(
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
+                                        );
+                                      },
+                                      fit: BoxFit.fitHeight,
                                     ),
-                                    fadeInDuration:
-                                        const Duration(milliseconds: 250),
-                                    fadeOutDuration:
-                                        const Duration(milliseconds: 250),
-                                    placeholderFadeInDuration:
-                                        const Duration(milliseconds: 250),
-                                    placeholder: (context, url) {
-                                      return Container(
-                                        width: double.infinity,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25,
-                                        alignment: Alignment.center,
-                                        child: CircularProgressIndicator(
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
-                                        ),
-                                      );
-                                    },
-                                    fit: BoxFit.fitHeight,
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  movieDetails['belongs_to_collection']['name'],
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground,
-                                    fontWeight: FontWeight.bold,
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    movieDetails['belongs_to_collection']
+                                        ['name'],
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                              ],
+                                  const SizedBox(height: 8),
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -483,10 +498,10 @@ class _SingleMoviePageState extends State<SingleMoviePage> {
               future: castFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
+                  return SizedBox(
                     width: double.infinity,
-                    height: double.infinity,
-                    child: Center(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   );
